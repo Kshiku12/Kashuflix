@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kashuflix.love</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='KK.png') }}">
+
+</head>
+
+<body>
+    <!-- Splash Screen -->
+    <div id="splash-screen">
+        <video id="splash-video" autoplay muted playsinline>
+            <source src="{{ url_for('static', filename='videos/netflix.mp4') }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <div id="main-content" style="display: none;">
+        <div class="wrapper">
+            <!-- Navigation Bar -->
+            <header>
+                <div class="navbar">
+                    <div class="logo">
+                        <a href="{{ url_for('index') }}">Kashu<span>flix</span></a>
+                    </div>
+                    <nav>
+                        <ul>
+                            <li><a href="{{ url_for('index') }}" class="active">Home</a></li>
+                            {% for category in categories %}
+                            <li><a href="{{ url_for('category', category_id=category.id) }}">{{ category.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </nav>
+                </div>
+            </header>
+
+            <!-- Hero Banner -->
+            {% if featured_memory %}
+            <div class="hero-banner" style="background-image: url('{{ url_for('static', filename=featured_memory.thumbnail[7:]) }}')">
+                <div class="hero-content">
+                    <h1>{{ featured_memory.title }}</h1>
+                    <p>{{ featured_memory.description }}</p>
+                    <div class="button-group">
+                        <a href="{{ url_for('watch_memory', memory_id=featured_memory.id) }}" class="btn btn-play">
+                            <i class="play-icon"></i> Play
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Memory Categories -->
+            <div class="content">
+                {% for category in categories %}
+                <div class="row">
+                    <h2>{{ category.name }}</h2>
+                    <div class="memory-slider">
+                        {% for memory in category.memories %}
+                        <div class="memory-item">
+                            <a href="{{ url_for('watch_memory', memory_id=memory.id) }}">
+                                <div class="memory-thumbnail" style="background-image: url('{{ url_for('static', filename=memory.thumbnail[7:]) }}')">
+                                    <div class="play-overlay">
+                                        <i class="play-icon"></i>
+                                    </div>
+                                </div>
+                                <div class="memory-info">
+                                    <h3>{{ memory.title }}</h3>
+                                    <span>{{ memory.date }}</span>
+                                </div>
+                            </a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Footer -->
+            <footer>
+                <div class="footer-content">
+                    <p>Created with ❤️ for {{ 'You' if request.remote_addr else 'Us' }}</p>
+                    <p>From Kshiku to his Kashu
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/functions.js') }}"></script>
+</body>
+
+</html>
